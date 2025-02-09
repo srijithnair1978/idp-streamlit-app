@@ -14,7 +14,7 @@ uploaded_cv = st.file_uploader("Upload HiPo Employee's CV PDF", type=["pdf"])
 
 if st.button("Generate IDP"):
     if uploaded_jd and uploaded_cv:
-        # ✅ Extract Text from PDFs
+        # ✅ Extract text directly from uploaded PDFs
         jd_text = extract_text_from_pdf(uploaded_jd)
         cv_text = extract_text_from_pdf(uploaded_cv)
 

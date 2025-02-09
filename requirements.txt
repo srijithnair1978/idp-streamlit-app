@@ -1,5 +1,4 @@
 streamlit
 pandas
+PyPDF2
 xlsxwriter
-langchain_community
-pypdf

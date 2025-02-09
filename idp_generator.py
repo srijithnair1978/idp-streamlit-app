@@ -1,6 +1,5 @@
 import pandas as pd
-from langchain_community.document_loaders import PyPDFLoader
-from langchain.text_splitter import CharacterTextSplitter
+from PyPDF2 import PdfReader
 
 # Updated role database with Treasury, Sales, and Marketing roles in a UAE bank context
 roles_data = {
@@ -42,13 +41,14 @@ roles_data = {
 
 roles_df = pd.DataFrame(roles_data)
 
-def extract_text_from_pdf(pdf_path):
-    """Extract text from a PDF file."""
-    loader = PyPDFLoader(pdf_path)
-    documents = loader.load()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-    texts = text_splitter.split_documents(documents)
-    return " ".join([t.page_content for t in texts])
+def extract_text_from_pdf(uploaded_file):
+    """Extract text from an uploaded PDF file."""
+    pdf_reader = PdfReader(uploaded_file)
+    text = ""
+    for page in pdf_reader.pages:
+        if page.extract_text():
+            text += page.extract_text() + "\n"
+    return text
 
 def generate_idp(hipo_cv_text, jd_text, role_selected):
     """Generate Individual Development Plan (IDP) based on competency gaps."""
@@ -71,4 +71,3 @@ def generate_idp(hipo_cv_text, jd_text, role_selected):
         idp_recommendations.append({"Competency": comp, "Required Proficiency": level, "Development Mode": mode})
 
     return pd.DataFrame(idp_recommendations)
-

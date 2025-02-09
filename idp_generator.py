@@ -1,7 +1,7 @@
 import pandas as pd
 from PyPDF2 import PdfReader
 
-# Updated role database with Treasury, Sales, and Marketing roles in a UAE bank context
+# Updated role database with additional competencies & proficiency levels
 roles_data = {
     "Current Role": [
         "Relationship Manager", "Credit Analyst", "Treasury Specialist",
@@ -41,6 +41,37 @@ roles_data = {
 
 roles_df = pd.DataFrame(roles_data)
 
+# Mapping for development needs descriptions
+development_needs = {
+    "Client Relationship": "Enhance client communication and stakeholder management.",
+    "Risk Management": "Develop skills in identifying and mitigating financial risks.",
+    "Financial Analysis": "Improve ability to analyze financial reports and market trends.",
+    "Risk Assessment": "Enhance risk evaluation strategies for credit decisions.",
+    "Financial Modelling": "Gain expertise in predictive financial modelling techniques.",
+    "Regulatory Compliance": "Deepen understanding of compliance frameworks and regulations.",
+    "Liquidity Management": "Optimize cash and liquidity management strategies.",
+    "Market Risk": "Strengthen knowledge of market risk assessment and trading strategies.",
+    "Investment Strategy": "Advance expertise in portfolio and investment planning.",
+    "Foreign Exchange": "Gain deeper understanding of FX markets and risk mitigation.",
+    "Liquidity Risk": "Enhance forecasting and liquidity planning capabilities.",
+    "Derivatives Trading": "Expand expertise in derivatives and risk hedging strategies.",
+    "Treasury Operations": "Improve efficiency in treasury functions and cash management.",
+    "Risk Hedging": "Develop skills in hedging strategies for financial risk.",
+    "Cash Flow Management": "Enhance forecasting and cash allocation methodologies.",
+    "Customer Acquisition": "Improve techniques for acquiring and retaining customers.",
+    "Negotiation": "Enhance negotiation skills for corporate deals and sales.",
+    "Sales Analytics": "Develop data-driven sales decision-making capabilities.",
+    "Sales Strategy": "Strengthen sales leadership and strategic sales planning.",
+    "B2B Partnerships": "Improve collaboration and deal structuring for B2B sales.",
+    "Revenue Optimization": "Develop strategies for increasing profitability and sales revenue.",
+    "Brand Management": "Enhance brand positioning and corporate communication strategies.",
+    "Market Research": "Strengthen ability to analyze market trends and consumer behavior.",
+    "Product Positioning": "Improve marketing and product differentiation strategies.",
+    "Digital Marketing": "Advance digital campaign strategies including SEO & PPC.",
+    "SEO & PPC": "Gain expertise in search engine optimization and paid advertising.",
+    "Campaign Analytics": "Develop ability to analyze and optimize marketing campaigns."
+}
+
 def extract_text_from_pdf(uploaded_file):
     """Extract text from an uploaded PDF file."""
     pdf_reader = PdfReader(uploaded_file)
@@ -68,6 +99,17 @@ def generate_idp(hipo_cv_text, jd_text, role_selected):
     idp_recommendations = []
     for comp, level in proficiency_gaps.items():
         mode = "E-learning & Virtual Courses" if level == "Basic" else "On-the-job Training & Mentoring"
-        idp_recommendations.append({"Competency": comp, "Required Proficiency": level, "Development Mode": mode})
+        timeline = "3-6 months" if level == "Advanced" else "6-12 months"
+        description = development_needs.get(comp, "Enhance skills in this area.")
+
+        idp_recommendations.append({
+            "Role": role_selected,
+            "Competency": comp,
+            "Current Proficiency": "Basic",  # Assuming basic unless detected from CV
+            "Required Proficiency": level,
+            "Development Need": description,
+            "Action Plan": mode,
+            "Estimated Timeline": timeline
+        })
 
     return pd.DataFrame(idp_recommendations)
